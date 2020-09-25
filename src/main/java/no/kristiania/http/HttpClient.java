@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class HttpClient {
+
+    private final int responseCode;
+
     public HttpClient(String hostname, int port, String requestTarget) throws IOException {
         Socket socket = new Socket(hostname, port);
 
@@ -13,10 +16,16 @@ public class HttpClient {
                 "\r\n";
         socket.getOutputStream().write(request.getBytes());
 
+        StringBuilder line = new StringBuilder(); //ta vare på teksten internt (HTTP/1.1 ..) StrinBuilder er som en string men lr seg manipuleres.
         int c;
         while ((c = socket.getInputStream().read()) != -1) {
-            System.out.print((char)c);
+            if (c == '\n') {
+                break; // går ut av while løkken
+            }
+            line.append((char)c);
         }
+        String[] responseLineParts = line.toString().split(" ");
+        responseCode = Integer.parseInt(responseLineParts[1]);
     }
 
     public static void main(String[] args) throws IOException {
@@ -28,6 +37,6 @@ public class HttpClient {
     }
 
     public int getResponseCode() {
-        return 200;
+        return responseCode;
     }
 }
