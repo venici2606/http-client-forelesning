@@ -3,6 +3,7 @@ package no.kristiania.http;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class QueryStringTest {
 
@@ -18,4 +19,11 @@ public class QueryStringTest {
         assertEquals("401", queryString.getParameter("status"));
     }
 
+    @Test
+    void shouldReturnNullForMissingParameters() {
+        QueryString queryString = new QueryString("body=Hello");
+        assertNull(queryString.getParameter("status")); //intelliJ simplyfy this
+    }
+
 }
+
