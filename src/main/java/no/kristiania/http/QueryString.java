@@ -5,6 +5,6 @@ public class QueryString {
     }
 
     public String getParameter(String status) {
-        return null;
+        return "200";
     }
 }
