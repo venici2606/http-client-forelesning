@@ -12,8 +12,7 @@ public class QueryString {
             int equalPos = parameter.indexOf('='); //index og ser etter hvilke posisjon er = . status (0-5) neste er = (6.)
             String parameterName = parameter.substring(0, equalPos);
             //private String parameterValue; // ikke private final som den ble opprettet som standard
-            //private String parameterName;
-            // ikke private final som den ble opprettet som standard
+            //private String parameterName; // ikke private final som den ble opprettet som standard
             String parameterValue = parameter.substring(equalPos + 1); //substring som starter på den posisjonen + 1 substring tar det som er etter =
             parameters.put(parameterName, parameterValue); //parameters og legger inn navn og value inn her
         }
