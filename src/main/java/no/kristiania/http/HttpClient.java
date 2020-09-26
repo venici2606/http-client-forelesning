@@ -2,10 +2,13 @@ package no.kristiania.http;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HttpClient {
 
     private final int responseCode;
+    private final Map<String, String> responseHeaders = new HashMap<>();
 
     public HttpClient(String hostname, int port, String requestTarget) throws IOException {
         Socket socket = new Socket(hostname, port);
@@ -21,10 +24,11 @@ public class HttpClient {
         responseCode = Integer.parseInt(responseLineParts[1]);
 
         String headerLine;
-        while (!headerLine = readLine(socket)).isEmpty()) { //2t25min på video av forelesning 3 Pull request
-            int colonPos = headerLine.indexOf(':');
+        while (!(headerLine = readLine(socket)).isEmpty()) {  // hvis den ikke er tom så skal den lese mer
+            int colonPos = headerLine.indexOf(':'); // finner posisjon
             String fieldName = headerLine.substring(0, colonPos);
-            String fieldValue = headerLine.substring(colonPos+1);
+            String fieldValue = headerLine.substring(colonPos+1).trim(); // trim returning a string whose value is this string, with all leading and trailoing space removed
+            responseHeaders.put(fieldName, fieldValue); //setter disse inn til map
 
         }
     }
@@ -33,7 +37,8 @@ public class HttpClient {
         StringBuilder line = new StringBuilder(); //ta vare på teksten internt (HTTP/1.1 ..) StrinBuilder er som en string men lr seg manipuleres.
         int c;
         while ((c = socket.getInputStream().read()) != -1) {
-            if (c == '\n') {
+            if (c == '\r') {
+                socket.getInputStream().read(); // read and discard the following \n
                 break; // går ut av while løkken
             }
             line.append((char)c);
@@ -55,6 +60,6 @@ public class HttpClient {
 
 
     public String getResponseHeader(String headerName) {
-        return null;
+        return responseHeaders.get(headerName);
     }
 }
